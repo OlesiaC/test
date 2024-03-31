@@ -1,5 +1,4 @@
-# Base URL for the ReqRes API
-HOST = "https://reqres.in/api"
+from cfg.constants import API_TEST_HOST as HOST
 
 
 class Endpoints:

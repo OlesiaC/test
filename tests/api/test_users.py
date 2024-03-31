@@ -1,6 +1,6 @@
 import allure
 import pytest
-from cfg.base import BaseTest
+from tests.api.base import BaseTest
 
 
 @allure.epic("Admin API")
