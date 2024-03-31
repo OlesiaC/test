@@ -13,23 +13,22 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
       - run:
-          name: Run tests
-          command: poetry run pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
-      - store_test_results:
-          path: junit.xml
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
+          name: Install dependencies
+          command: poetry install
       - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          name: install browsers
+          command: playwright install
+      - run:
+          name: Run tests
+          command: poetry run pytest -sv --alluredir=allure-results || ((($? == 5)) && echo 'Did not find any tests to run.')
+      - run:
+          name: Generate Allure Report
+          command: allure generate allure-results --clean -o allure-report
+      - store_artifacts:
+          path: allure-report
+          destination: allure-report
+
 workflows:
   build-and-test:
     jobs:
       - test-python
-    # - deploy:
-    #     requires:
-    #       - test-python
