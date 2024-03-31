@@ -17,7 +17,7 @@ jobs:
           command: poetry install
       - run:
           name: install browsers
-          command: poetry playwright install
+          command: poetry run playwright install
       - run:
           name: Run tests
           command: poetry run pytest -sv --alluredir=allure-results || ((($? == 5)) && echo 'Did not find any tests to run.')
