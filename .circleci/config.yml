@@ -1,11 +1,8 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:python:.,package_manager:poetry:.
 version: 2.1
 orbs:
   python: circleci/python@2
 jobs:
   test-python:
-    # Install dependencies and run tests
     docker:
       - image: cimg/python:3.11-node
     steps:
@@ -16,7 +13,10 @@ jobs:
           name: Install dependencies
           command: poetry install
       - run:
-          name: Install OpenJDK
+          name: Update package lists
+          command: sudo apt-get update
+      - run:
+          name: Install OpenJDK 11
           command: sudo apt-get install -y openjdk-11-jre
       - run:
           name: Install Allure
@@ -26,7 +26,6 @@ jobs:
       - run:
           name: Install Playwright dependencies
           command: |
-            sudo apt-get update
             sudo apt-get install -y libatk1.0-0 \
                 libatk-bridge2.0-0 \
                 libcups2 \
@@ -38,7 +37,7 @@ jobs:
                 libcairo2 \
                 libasound2
       - run:
-          name: install browsers
+          name: Install browsers
           command: poetry run playwright install
       - run:
           name: Run tests
