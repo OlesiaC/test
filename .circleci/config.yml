@@ -16,6 +16,13 @@ jobs:
           name: Install dependencies
           command: poetry install
       - run:
+          name: Install Allure
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y wget
+            wget https://github.com/allure-framework/allure2/releases/download/2.19.0/allure_2.19.0-1_all.deb
+            sudo dpkg -i allure_2.19.0-1_all.deb
+      - run:
           name: Install Playwright dependencies
           command: |
             sudo apt-get update
