@@ -18,6 +18,24 @@ A small project with couple UI and API tests written in Python
     ```
 
 
+### Requirements
+
+- Install dependencies from .toml file:
+
+    ```
+    poetry install
+    ```
+- Activate virtual environment:
+
+    ```
+    poetry shell
+    ```
+- Install playwright dependencies:
+
+    ```
+    poetry run playwright install
+    ```
+
 
 ### Local run options
 
