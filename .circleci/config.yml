@@ -1,0 +1,55 @@
+version: 2.1
+orbs:
+  python: circleci/python@2
+jobs:
+  test-python:
+    docker:
+      - image: cimg/python:3.11-node
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: poetry
+      - run:
+          name: Install dependencies
+          command: poetry install
+      - run:
+          name: Update package lists
+          command: sudo apt-get update
+      - run:
+          name: Install OpenJDK 11
+          command: sudo apt-get install -y openjdk-11-jre
+      - run:
+          name: Install Allure
+          command: |
+            wget https://github.com/allure-framework/allure2/releases/download/2.19.0/allure_2.19.0-1_all.deb
+            sudo dpkg -i allure_2.19.0-1_all.deb
+      - run:
+          name: Install Playwright dependencies
+          command: |
+            sudo apt-get install -y libatk1.0-0 \
+                libatk-bridge2.0-0 \
+                libcups2 \
+                libatspi2.0-0 \
+                libxdamage1 \
+                libgbm1 \
+                libxkbcommon0 \
+                libpango-1.0-0 \
+                libcairo2 \
+                libasound2
+      - run:
+          name: Install browsers
+          command: poetry run playwright install
+      - run:
+          name: Run tests
+          command: poetry run pytest -sv --alluredir=allure-results || ((($? == 5)) && echo 'Did not find any tests to run.')
+      - run:
+          name: Generate Allure Report
+          command: allure generate allure-results --clean -o allure-report
+      - store_artifacts:
+          path: allure-report
+          destination: allure-report
+
+workflows:
+  build-and-test:
+    jobs:
+      - test-python
